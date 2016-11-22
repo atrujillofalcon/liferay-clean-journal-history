@@ -21,18 +21,18 @@ class CleanArticleHistory {
         toAdd.addAll(GroupLocalServiceUtil.getGroups(10131, "com.liferay.portal.model.Group", 0))
 
         for (Group curGroup : toAdd) {
-            _log.info("PROCESANDO GROUP: " + curGroup.getGroupId())
+            _log.info("PROCESSING GROUP: " + curGroup.getGroupId())
             DynamicQuery differentArticleIdsQuery = DynamicQueryFactoryUtil.forClass(JournalArticle.class, PortalClassLoaderUtil.getClassLoader())
             differentArticleIdsQuery.setProjection(ProjectionFactoryUtil.distinct(PropertyFactoryUtil.forName("articleId")))
             Criterion groupIdCriterion = RestrictionsFactoryUtil.eq("groupId", curGroup.getGroupId())
             differentArticleIdsQuery.add(groupIdCriterion)
             List<Object> differentIds = JournalArticleLocalServiceUtil.dynamicQuery(differentArticleIdsQuery)
             for (Object curId : differentIds) {
-                _log.info("PROCESANDO ARTICLEID: " + curId)
+                _log.info("PROCESSING ARTICLEID: " + curId)
                 JournalArticle lastVersion = JournalArticleLocalServiceUtil.fetchLatestArticle(curGroup.getGroupId(), (String) curId, WorkflowConstants.STATUS_APPROVED)
                 if (lastVersion == null){
                     lastVersion=JournalArticleLocalServiceUtil.fetchLatestArticle(curGroup.getGroupId(), (String) curId, WorkflowConstants.STATUS_ANY)
-                    _log.warn("EL CONTENIDO NO TIENE NINGUNA VERSION APROBADA")
+                    _log.warn("THIS JOURNAL ARTICLE HAS NOT ANY APPROVED VERSION")
                     if(lastVersion==null) continue
                 }
 
@@ -46,14 +46,14 @@ class CleanArticleHistory {
                         if (deleteArticles) {
                             JournalArticleLocalServiceUtil.deleteArticle(article)
                         }
-                        _log.debug("Borrada version: " + version + " del JournalArticle: " + curId)
+                        _log.debug("Deleted version: " + version + " of JournalArticle: " + curId)
                         versionsCount--; countDeleted++
                     }
                 }
-                _log.info("Borrados: " + countDeleted + " de un total de: " + totalArticlesCount)
+                _log.info("Current deleted: " + countDeleted + " from total: " + totalArticlesCount)
             }
         }
-        _log.info("BORRADOS TOTALMENTE: " + countDeleted + " DE UN TOTAL DE: " + totalArticlesCount)
+        _log.info("DELETED AT THE SCRIPT END: " + countDeleted + " FROM TOTAL: " + totalArticlesCount)
     }
 
     private static Log _log = LogFactoryUtil.getLog(CleanArticleHistory.class)
