@@ -8,6 +8,7 @@ import com.liferay.portal.model.Group
 import com.liferay.portlet.journal.model.JournalArticle
 import com.liferay.portal.service.GroupLocalServiceUtil
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil
+import com.liferay.portal.security.auth.CompanyThreadLocal
 
 import java.util.Comparator
 
@@ -17,8 +18,8 @@ class CleanArticleHistory {
         long countDeleted = 0
         int totalArticlesCount = JournalArticleLocalServiceUtil.getJournalArticlesCount()
         List<Group> toAdd = new ArrayList<Group>()
-        toAdd.addAll(GroupLocalServiceUtil.getGroups(10131, "com.liferay.portal.model.Company", 0))
-        toAdd.addAll(GroupLocalServiceUtil.getGroups(10131, "com.liferay.portal.model.Group", 0))
+        toAdd.addAll(GroupLocalServiceUtil.getGroups(companyId, "com.liferay.portal.model.Company", 0))
+        toAdd.addAll(GroupLocalServiceUtil.getGroups(companyId, "com.liferay.portal.model.Group", 0))
 
         for (Group curGroup : toAdd) {
             _log.info("PROCESSING GROUP: " + curGroup.getGroupId())
@@ -58,7 +59,7 @@ class CleanArticleHistory {
 
     private static Log _log = LogFactoryUtil.getLog(CleanArticleHistory.class)
     private static boolean deleteArticles = true
-    private static long companyId = 10131
+    private static long companyId = CompanyThreadLocal.getCompanyId()
     private static long leaveVersionCount = 2
     private static Comparator<JournalArticle> versionComparator = new Comparator<JournalArticle>() {
         @Override
