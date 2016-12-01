@@ -3,6 +3,8 @@ Groovy script that makes possible to delete or only list old journal articles an
 
 If you only want to list the journal articles targeted to be deleted you have to set false the variable <b>deleteArticles</b>.
 
+If you only want to process a determined sites, you can set explicitly the groupId's in the variable <b>groupIds</b>.
+
 The steps to execute this script are:
 
 <b>Control_Panel -> Server_Administration -> Script ->  Groovy Script</b>
