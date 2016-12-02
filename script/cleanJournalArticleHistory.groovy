@@ -28,8 +28,8 @@ class CleanArticleHistory {
             }
         } else {
             totalArticlesCount = JournalArticleLocalServiceUtil.getJournalArticlesCount()
-            toAdd.addAll(GroupLocalServiceUtil.getGroups(10131, "com.liferay.portal.model.Company", 0))
-            toAdd.addAll(GroupLocalServiceUtil.getGroups(10131, "com.liferay.portal.model.Group", 0))
+            toAdd.addAll(GroupLocalServiceUtil.getGroups(companyId, "com.liferay.portal.model.Company", 0))
+            toAdd.addAll(GroupLocalServiceUtil.getGroups(companyId, "com.liferay.portal.model.Group", 0))
         }
 
 
