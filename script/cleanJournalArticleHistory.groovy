@@ -2,13 +2,12 @@ import com.liferay.portal.kernel.log.Log
 import com.liferay.portal.kernel.log.LogFactoryUtil
 import com.liferay.portal.kernel.dao.orm.*
 import com.liferay.portal.kernel.util.ListUtil
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil
 import com.liferay.portal.kernel.workflow.WorkflowConstants
-import com.liferay.portal.model.Group
-import com.liferay.portlet.journal.model.JournalArticle
-import com.liferay.portal.service.GroupLocalServiceUtil
-import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil
-import com.liferay.portal.security.auth.CompanyThreadLocal
+import com.liferay.portal.kernel.model.Group
+import com.liferay.journal.model.JournalArticle
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil
+import com.liferay.journal.service.JournalArticleLocalServiceUtil
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal
 
 import java.util.Comparator
 
@@ -35,7 +34,7 @@ class CleanArticleHistory {
 
         for (Group curGroup : toAdd) {
             _log.info("PROCESANDO GROUP: " + curGroup.getGroupId())
-            DynamicQuery differentArticleIdsQuery = DynamicQueryFactoryUtil.forClass(JournalArticle.class, PortalClassLoaderUtil.getClassLoader())
+            DynamicQuery differentArticleIdsQuery = DynamicQueryFactoryUtil.forClass(JournalArticle.class)
             differentArticleIdsQuery.setProjection(ProjectionFactoryUtil.distinct(PropertyFactoryUtil.forName("articleId")))
             Criterion groupIdCriterion = RestrictionsFactoryUtil.eq("groupId", curGroup.getGroupId())
             differentArticleIdsQuery.add(groupIdCriterion)
@@ -74,7 +73,7 @@ class CleanArticleHistory {
     private static boolean deleteArticles = true
     private static long companyId = CompanyThreadLocal.getCompanyId()
     private static long leaveVersionCount = 2
-    
+
     private static Comparator<JournalArticle> versionComparator = new Comparator<JournalArticle>() {
         @Override
         int compare(JournalArticle o1, JournalArticle o2) {
